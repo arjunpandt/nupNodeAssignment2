@@ -9,14 +9,15 @@ const {
   updateUserInfo,
 } = require("../controllers/user.controller");
 
-router.get("/", getAllUsers);
+// AL routes
+router.get("/users", getAllUsers);
 
 router.post("/adduser", addUser);
 
-router.get("/:id", getUserById);
+router.get("/user/:id", getUserById);
 
-router.delete("/:id", deleteUser);
+router.delete("/deleteuser/:id", deleteUser);
 
-router.put("/:id", updateUserInfo);
+router.put("/updateuser/:id", updateUserInfo);
 
 module.exports = router;

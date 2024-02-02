@@ -2,22 +2,28 @@ const fs = require("fs");
 // to generate unique id for every user
 const { v4 } = require("uuid");
 
-let data = require("../data.json");
-const jsonFilePath = "./data.json";
-const { log } = require("console");
+let data = require("../db/data.json");
+const jsonFilePath = "./db/data.json";
 
 // Get All Users Info
 const getAllUsers = (req, res) => {
-  res.json("200", data);
+  res.status(200).send(data);
 };
 
 // Add New User
 const addUser = (req, res) => {
   const user = req.body;
-  data.push({ ...user, id: v4() });
-  updateDataFile();
-  console.log("user added");
-  res.send(`User "${user.name}" has been added successfully.`);
+  const existingUser = data.find((val) => val.id === user.id);
+  console.log(user.username, user.email);
+  if (user.username === undefined || user.email === undefined) {
+    res.status(403).send("Invalid User Info");
+  } else if (existingUser) {
+    res.status(409).send(`User already exists with this id ${user.id}`);
+  } else {
+    user.id ? data.push({ ...user }) : data.push({ ...user, id: v4() });
+    updateDataFile();
+    res.send(`User "${user.username}" has been added successfully.`);
+  }
 };
 
 // Get Single user by Id
